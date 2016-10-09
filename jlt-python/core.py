@@ -42,9 +42,27 @@ def jlt_circulant(dataset_in,objective_dim):
 
 	first_row=np.random.normal(0,1,size=(1,len(dataset_in[0])))
 	jlt=((1/math.sqrt(objective_dim))*circulant(first_row))[:objective_dim]
-	
+
 	trans_dataset=[]
 	[trans_dataset.append(np.dot(jlt,np.transpose(dataset_in[i]))) 
 		for i in range(len(dataset_in))]
 	return trans_dataset
 
+def jlt_toeplitz(dataset_in,objective_dim):
+	"""
+	This function takes the dataset_in and returns the reduced dataset. The 
+	output dimension is objective_dim.
+	The reduction is done using a Toeplitz JLT: the first row and column of the 
+	transformation matrix is taken at random in N(0,1), and each diagonal has
+	a constant value taken from these first vector
+	"""
+	from scipy.linalg import toeplitz
+
+	first_row=np.random.normal(0,1,size=(1,len(dataset_in[0])))
+	first_column=np.random.normal(0,1,size=(1,objective_dim))
+	jlt=((1/math.sqrt(objective_dim))*toeplitz(first_column,first_row))
+
+	trans_dataset=[]
+	[trans_dataset.append(np.dot(jlt,np.transpose(dataset_in[i]))) 
+		for i in range(len(dataset_in))]
+	return trans_dataset
