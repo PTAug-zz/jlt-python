@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def create_vector(dim:int):
 	"""
@@ -36,7 +37,21 @@ def get_random_pairs(dim:int,max_value:int):
 	return [(L[i], L[i+1]) for i in range(0, len(L), 2)]
 
 def distance_dataset(pairs,dataset):
+	"""
+	This function gives the distances between each pair of vector of dataset
+	whose indices are in pairs.
+	"""
 	list_distance=[]
 	[list_distance.append(get_distance(dataset[p[0]],dataset[p[1]])) 
 		for p in pairs]
 	return list_distance
+
+def plot_ratio(ratio,precision=0.05):
+	"""
+	This function plots the distribution of the ratio of the distance between two vectors
+	before and after the JLT.
+	"""
+	hist, bin_edges = np.histogram(ratio, bins = np.arange(0,2,precision))
+	plt.bar(bin_edges[:-1], hist, width = precision)
+	plt.xlim(min(bin_edges), max(bin_edges))
+	plt.show()
