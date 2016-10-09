@@ -70,11 +70,11 @@ def plot_distance_performance(initial_dataset,transformed_dataset,
 
     hist, bin_edges = np.histogram(ratio, bins=np.arange(0, 2, precision))
     fig=plt.figure()
-    fig.suptitle('bold figure suptitle', fontsize=14, fontweight='bold')
+    fig.suptitle('Dimensionality reduction performance', fontsize=14, fontweight='bold')
 
     ax = fig.add_subplot(111)
     fig.subplots_adjust(top=0.85)
-    ax.set_title('axes title')
+    ax.set_title('Ratio of the pairwise vector distance before and after reduction')
 
     ax.text(0.98, 0.98,'$\epsilon=$%.3f'%epsilon, fontsize=15,
         verticalalignment='top', horizontalalignment='right',
