@@ -52,14 +52,37 @@ def distance_dataset(pairs, dataset):
     return list_distance
 
 
-def plot_ratio(ratio, precision=0.05):
+def plot_distance_performance(initial_dataset,transformed_dataset, 
+        precision=0.05):
     """
 	This function plots the distribution of the ratio of the distance between two vectors
 	before and after the JLT.
 	"""
+    index=get_random_pairs(int(len(initial_dataset)/2),len(initial_dataset))
+    init_dist = distance_dataset(index,initial_dataset)
+    tr_dist = distance_dataset(index,transformed_dataset)
+    ratio =[]
+    [ratio.append(tr_dist[i]/init_dist[i]) for i in range(int(len(index)))]
+    max_ratio = max(ratio)
+    min_ratio = min(ratio)
+    epsilon=(max([abs(1-min_ratio),(1-max_ratio)]))
+    print(epsilon)
+
     hist, bin_edges = np.histogram(ratio, bins=np.arange(0, 2, precision))
-    plt.bar(bin_edges[:-1], hist, width=precision)
-    plt.axvline(x=min(ratio))
-    plt.axvline(x=max(ratio))
+    fig=plt.figure()
+    fig.suptitle('bold figure suptitle', fontsize=14, fontweight='bold')
+
+    ax = fig.add_subplot(111)
+    fig.subplots_adjust(top=0.85)
+    ax.set_title('axes title')
+
+    ax.text(0.98, 0.98,'$\epsilon=$%.3f'%epsilon, fontsize=15,
+        verticalalignment='top', horizontalalignment='right',
+        transform=ax.transAxes)
+    ax.bar(bin_edges[:-1], hist, width=precision,color='#eeefff')
+    ax.axvline(x=min_ratio,c='r',label=('Min=%.3f'%(min_ratio)))
+    ax.axvline(x=max_ratio,c='g',label=('Max=%.3f'%(max_ratio)))
+
+    ax.legend(loc='upper left')
     plt.xlim(min(bin_edges), max(bin_edges))
     plt.show()
