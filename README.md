@@ -24,4 +24,4 @@ Each dimension of each datapoint created in a dataset with the function `create_
 
 Then we evaluate the performance of the reduction by evaluating the ratio of the pairwise vector distance before and after reduction for random pairs of vectors. The `plot_distance_performance` outputs the graphical distribution of this ratio. The smallest the epsilon is, the less distortion there is in the reduction, the better it is.
 
-![alt text](https://github.com/PTAug/jlt-python/tree/master/doc/img/example.png "Output example")
+![Output example](https://github.com/PTAug/jlt-python/blob/master/doc/img/example.png)
