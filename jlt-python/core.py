@@ -1,66 +1,43 @@
 from utils import *
 import math
 
-
-def jlt_basic(dataset_in,objective_dim):
+def jl_transform(dataset_in,objective_dim,type_transform="basic"):
 	"""
 	This function takes the dataset_in and returns the reduced dataset. The 
 	output dimension is objective_dim.
-	The reduction is done using a basic JLT: each component of the 
-	transformation matrix is taken at random in N(0,1).
+
+	dataset_in -- original dataset, list of Numpy ndarray
+	objective_dim -- objective dimension of the reduction
+	type_transform -- type of the transformation matrix used. 
+	If "basic" (default), each component of the transformation matrix 
+	is taken at random in N(0,1).
+	If "discrete", each component of the transformation matrix 
+	is taken at random in {-1,1}.
+	If "circulant", he first row of the transformation matrix 
+	is taken at random in N(0,1), and each row is obtainedfrom the 
+	previous one by a one-left shift.
+	If "toeplitz", the first row and column of the transformation 
+	matrix is taken at random in N(0,1), and each diagonal has a 
+	constant value taken from these first vector.
 	"""
-	jlt=(1/math.sqrt(objective_dim))*np.random.normal(0,1,size=(objective_dim,
+	if type_transform.lower() == "basic":
+		jlt=(1/math.sqrt(objective_dim))*np.random.normal(0,1,size=(objective_dim,
 		len(dataset_in[0])))
-	trans_dataset=[]
-	[trans_dataset.append(np.dot(jlt,np.transpose(dataset_in[i]))) 
-		for i in range(len(dataset_in))]
-	return trans_dataset
-
-def jlt_discrete(dataset_in,objective_dim):
-	"""
-	This function takes the dataset_in and returns the reduced dataset. The 
-	output dimension is objective_dim.
-	The reduction is done using a discrete JLT: each component of the 
-	transformation matrix is taken at random in {-1,1}.
-	"""
-	jlt=(1/math.sqrt(objective_dim))*np.random.choice([-1,1],
+	elif type_transform.lower() == "discrete":
+		jlt=(1/math.sqrt(objective_dim))*np.random.choice([-1,1],
 		size=(objective_dim,len(dataset_in[0])))
-	trans_dataset=[]
-	[trans_dataset.append(np.dot(jlt,np.transpose(dataset_in[i]))) 
-		for i in range(len(dataset_in))]
-	return trans_dataset
-
-def jlt_circulant(dataset_in,objective_dim):
-	"""
-	This function takes the dataset_in and returns the reduced dataset. The 
-	output dimension is objective_dim.
-	The reduction is done using a circulant JLT: the first row of the 
-	transformation matrix is taken at random in N(0,1), and each row is obtained
-	from the previous one by a one-left shift.
-	"""
-	from scipy.linalg import circulant
-
-	first_row=np.random.normal(0,1,size=(1,len(dataset_in[0])))
-	jlt=((1/math.sqrt(objective_dim))*circulant(first_row))[:objective_dim]
-
-	trans_dataset=[]
-	[trans_dataset.append(np.dot(jlt,np.transpose(dataset_in[i]))) 
-		for i in range(len(dataset_in))]
-	return trans_dataset
-
-def jlt_toeplitz(dataset_in,objective_dim):
-	"""
-	This function takes the dataset_in and returns the reduced dataset. The 
-	output dimension is objective_dim.
-	The reduction is done using a Toeplitz JLT: the first row and column of the 
-	transformation matrix is taken at random in N(0,1), and each diagonal has
-	a constant value taken from these first vector
-	"""
-	from scipy.linalg import toeplitz
-
-	first_row=np.random.normal(0,1,size=(1,len(dataset_in[0])))
-	first_column=np.random.normal(0,1,size=(1,objective_dim))
-	jlt=((1/math.sqrt(objective_dim))*toeplitz(first_column,first_row))
+	elif type_transform.lower() == "circulant":
+		from scipy.linalg import circulant
+		first_row=np.random.normal(0,1,size=(1,len(dataset_in[0])))
+		jlt=((1/math.sqrt(objective_dim))*circulant(first_row))[:objective_dim]
+	elif type_transform.lower() == "toeplitz":
+		from scipy.linalg import toeplitz
+		first_row=np.random.normal(0,1,size=(1,len(dataset_in[0])))
+		first_column=np.random.normal(0,1,size=(1,objective_dim))
+		jlt=((1/math.sqrt(objective_dim))*toeplitz(first_column,first_row))
+	else:
+		print('Wrong transformation type')
+		return None
 
 	trans_dataset=[]
 	[trans_dataset.append(np.dot(jlt,np.transpose(dataset_in[i]))) 
