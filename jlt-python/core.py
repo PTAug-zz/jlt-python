@@ -43,3 +43,16 @@ def jl_transform(dataset_in,objective_dim,type_transform="basic"):
 	[trans_dataset.append(np.dot(jlt,np.transpose(dataset_in[i]))) 
 		for i in range(len(dataset_in))]
 	return trans_dataset
+
+def triplespin_transform(dataset_in, objective_dim):
+	from scipy.linalg import hadamard
+	n=2**(int(log(x-1,2))+1)
+	Had = scipy.linalg.hadamard(n)
+	d1=np.diagflat(np.random.choice([-1,1],size=(1,len(dataset_in[0]))))
+	d2=np.diagflat(np.random.choice([-1,1],size=(1,len(dataset_in[0]))))
+	d3=np.diagflat(np.random.choice([-1,1],size=(1,len(dataset_in[0]))))
+	tr_mat=((1/math.sqrt(objective_dim)))*(Had*d1*Had*d2*Had*d3)[:objective_dim]
+	trans_dataset=[]
+	[trans_dataset.append(np.dot(tr_mat,np.transpose(dataset_in[i]))) 
+		for i in range(len(dataset_in))]
+	return trans_dataset
